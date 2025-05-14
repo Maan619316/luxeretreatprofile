@@ -3529,7 +3529,10 @@ div#mCSB_1_container {
   color: #fff;
 }
 
-#countdown-days {
+#countdown-days,
+#countdown-hours,
+#countdown-minutes,
+#countdown-seconds {
   color: #ff6f00;
   font-weight: 900;
   font-size: 24px;

@@ -77,11 +77,13 @@
     <!-- Countdown Banner -->
     <div class="countdown-banner">
       <div class="auto-container">
-        <div class="countdown-text">
-          <span id="countdown-days">90</span> days left until the retreat!
+        <div class="countdown-text" id="countdown-timer">
+          <span id="countdown-days"> -- days -- hrs -- mins -- secs </span>left
+          until the retreat!
         </div>
       </div>
     </div>
+
     <div class="boxed_wrapper">
       <!-- main header -->
       <header class="main-header header-style-one">
@@ -1551,27 +1553,38 @@
     <script>
       // Countdown to retreat (September 5, 2025)
       document.addEventListener("DOMContentLoaded", function () {
-        const retreatDate = new Date("September 5, 2025 00:00:00").getTime();
-        const countdownEl = document.getElementById("countdown-days");
+        const retreatDate = new Date("2025-09-05T00:00:00+01:00").getTime();
+        const countdownEl = document.getElementById("countdown-timer");
 
         function updateCountdown() {
           const now = new Date().getTime();
           const diff = retreatDate - now;
-          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-          if (days > 0) {
-            countdownEl.textContent = days;
+          if (diff > 0) {
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor(
+              (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            countdownEl.innerHTML = `
+          <span id="countdown-days">${days}</span> days 
+          <span id="countdown-hours">${hours}</span> hrs 
+          <span id="countdown-minutes">${minutes}</span> mins 
+          <span id="countdown-seconds">${seconds}</span> secs 
+          left until the retreat!
+        `;
           } else {
-            countdownEl.textContent = "0";
-            clearInterval(countdownInterval);
-            document.querySelector(".countdown-text").textContent =
+            countdownEl.textContent =
               "The retreat is happening now! Join us next time.";
+            clearInterval(countdownInterval);
           }
         }
 
-        // Update immediately and then every 24 hours
+        // Update immediately and then every second
         updateCountdown();
-        const countdownInterval = setInterval(updateCountdown, 86400000); // 24hrs
+        const countdownInterval = setInterval(updateCountdown, 1000); // every second
       });
     </script>
   </body>
