@@ -3553,6 +3553,8 @@ div#mCSB_1_container {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  padding: 15px;
+  box-sizing: border-box;
 }
 
 .modal-overlay.active {
@@ -3561,26 +3563,140 @@ div#mCSB_1_container {
 }
 
 .modal-container {
-  width: 90%;
-  max-width: 600px;
-  height: 625px;
-  border-radius: 4px;
-  padding: 0;
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-close {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  background: none;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5);
   border: none;
-  font-size: 24px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 18px;
   color: white;
   cursor: pointer;
   z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Form styles */
+.form-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.required-field::after {
+  content: " *";
+  color: red;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #3a7bc8;
+}
+
+.thank-you-message {
+  text-align: center;
+  padding: 20px;
+  display: none;
+}
+
+.thank-you-message h2 {
+  color: #4a90e2;
+  margin-bottom: 10px;
+}
+
+#result {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  display: none;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
 /* Blur effect for background when modal is open */
 body.modal-open {
   overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 480px) {
+  .modal-container {
+    padding: 20px 15px;
+    max-height: 85vh;
+  }
+
+  .modal-overlay {
+    padding: 0;
+  }
+}
+
+.hidden {
+  display: none !important;
 }

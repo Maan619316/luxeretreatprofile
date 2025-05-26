@@ -1457,32 +1457,81 @@
     <div class="modal-overlay" id="modalOverlay">
       <button class="modal-close" id="modalClose">&times;</button>
       <div class="modal-container">
-        <iframe
-          src="https://api.leadconnectorhq.com/widget/form/BymQPzbjQP0MlhBnYegI"
-          style="width: 100%; height: 100%; border: none; border-radius: 4px"
-          id="inline-BymQPzbjQP0MlhBnYegI"
-          data-layout="{'id':'INLINE'}"
-          data-trigger-type="alwaysShow"
-          data-trigger-value=""
-          data-activation-type="alwaysActivated"
-          data-activation-value=""
-          data-deactivation-type="neverDeactivate"
-          data-deactivation-value=""
-          data-form-name="Contact Us"
-          data-height="625"
-          data-layout-iframe-id="inline-BymQPzbjQP0MlhBnYegI"
-          data-form-id="BymQPzbjQP0MlhBnYegI"
-          title="Contact Us"
-        >
-        </iframe>
+        <div id="formContainer">
+          <h2 class="form-title">Book Your Appointment</h2>
+          <form id="appointmentForm" method="POST">
+            <input
+              type="hidden"
+              name="access_key"
+              value="1377c221-8e24-4c38-9f46-8d56307728a9"
+            />
+            <input type="hidden" name="redirect" value="false" />
+            <input type="checkbox" name="botcheck" class="hidden" />
+
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="required-field">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone" class="required-field">Phone</label>
+              <input type="tel" id="phone" name="phone" required />
+            </div>
+
+            <div class="form-group">
+              <label for="mental_health" class="required-field"
+                >Are you currently suffering from mental health?</label
+              >
+              <select id="mental_health" name="mental_health" required>
+                <option value="">Select an option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="retreat_experience"
+                >Have you attended a fitness retreat before?</label
+              >
+              <select id="retreat_experience" name="retreat_experience">
+                <option value="">Select an option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              SUBMIT TO BOOK APPOINTMENT
+            </button>
+            <div id="result"></div>
+          </form>
+        </div>
+
+        <div id="thankYouMessage" class="thank-you-message">
+          <h2>Thank You!</h2>
+          <p>Your information has been submitted successfully.</p>
+          <p>You'll be redirected to the booking page shortly.</p>
+        </div>
       </div>
     </div>
 
     <script>
-      // Get all buttons with the class
+      // Get all elements
       const bookCallBtns = document.querySelectorAll(".book-call-btn");
       const modalOverlay = document.getElementById("modalOverlay");
       const modalClose = document.getElementById("modalClose");
+      const appointmentForm = document.getElementById("appointmentForm");
+      const formContainer = document.getElementById("formContainer");
+      const thankYouMessage = document.getElementById("thankYouMessage");
+      const resultDiv = document.getElementById("result");
+      const bookingUrl =
+        "https://api.leadconnectorhq.com/widget/booking/Vwl6EYbaUfI9RPmahE9w";
 
       // Add event listener to each button
       bookCallBtns.forEach((btn) => {
@@ -1490,24 +1539,91 @@
           e.preventDefault();
           document.body.classList.add("modal-open");
           modalOverlay.classList.add("active");
+          // Reset form when opening
+          appointmentForm.reset();
+          formContainer.style.display = "block";
+          thankYouMessage.style.display = "none";
+          resultDiv.style.display = "none";
         });
       });
 
       // Close modal when close button is clicked
       modalClose.addEventListener("click", function () {
-        document.body.classList.remove("modal-open");
-        modalOverlay.classList.remove("active");
+        closeModal();
       });
 
-      // Close modal when clicking outside the iframe
+      // Close modal when clicking outside the form
       modalOverlay.addEventListener("click", function (e) {
         if (e.target === modalOverlay) {
-          document.body.classList.remove("modal-open");
-          modalOverlay.classList.remove("active");
+          closeModal();
+        }
+      });
+
+      // Form submission
+      appointmentForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        resultDiv.style.display = "none";
+
+        const formData = new FormData(appointmentForm);
+        const object = Object.fromEntries(formData);
+        const json = JSON.stringify(object);
+
+        resultDiv.innerHTML = "Please wait...";
+        resultDiv.style.display = "block";
+
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: json,
+        })
+          .then(async (response) => {
+            let json = await response.json();
+            if (response.status == 200) {
+              resultDiv.innerHTML = "Form submitted successfully";
+              resultDiv.className = "success";
+
+              // Show thank you message
+              formContainer.style.display = "none";
+              thankYouMessage.style.display = "block";
+
+              // Open booking link in new tab after 2 seconds
+              setTimeout(() => {
+                window.open(bookingUrl, "_blank");
+                closeModal();
+              }, 2000);
+            } else {
+              console.log(response);
+              resultDiv.innerHTML = json.message || "Error submitting form";
+              resultDiv.className = "error";
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            resultDiv.innerHTML = "Something went wrong!";
+            resultDiv.className = "error";
+          })
+          .then(function () {
+            setTimeout(() => {
+              resultDiv.style.display = "none";
+            }, 5000);
+          });
+      });
+
+      function closeModal() {
+        document.body.classList.remove("modal-open");
+        modalOverlay.classList.remove("active");
+      }
+
+      // Handle mobile viewport resize
+      window.addEventListener("resize", function () {
+        if (document.body.classList.contains("modal-open")) {
+          document.body.style.width = window.innerWidth + "px";
         }
       });
     </script>
-    <script src="https://link.msgsndr.com/js/form_embed.js"></script>
 
     <!-- jequery plugins -->
     <script src="assets/js/jquery.js"></script>
