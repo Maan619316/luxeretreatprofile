@@ -1946,7 +1946,18 @@
         // Optional: Add URL hash navigation
         window.addEventListener("hashchange", function () {
           const hash = window.location.hash.substring(1);
-          if (["day1", "day2", "day3", "day4"].includes(hash)) {
+          if (
+            [
+              "day1",
+              "day2",
+              "day3",
+              "day4",
+              "day5",
+              "day6",
+              "day7",
+              "day8",
+            ].includes(hash)
+          ) {
             // Remove active class from all buttons and contents
             dayButtons.forEach((btn) => btn.classList.remove("active"));
             dayContents.forEach((content) =>
@@ -1964,7 +1975,18 @@
         // Check for hash on initial load
         if (window.location.hash) {
           const hash = window.location.hash.substring(1);
-          if (["day1", "day2", "day3", "day4"].includes(hash)) {
+          if (
+            [
+              "day1",
+              "day2",
+              "day3",
+              "day4",
+              "day5",
+              "day6",
+              "day7",
+              "day8",
+            ].includes(hash)
+          ) {
             // Remove active class from all buttons and contents
             dayButtons.forEach((btn) => btn.classList.remove("active"));
             dayContents.forEach((content) =>
@@ -1983,7 +2005,7 @@
     <script>
       // Countdown to retreat (September 5, 2025)
       document.addEventListener("DOMContentLoaded", function () {
-        const retreatDate = new Date("2025-09-05T00:00:00+01:00").getTime();
+        const retreatDate = new Date("2025-12-16T00:00:00+01:00").getTime();
         const countdownEl = document.getElementById("countdown-timer");
 
         function updateCountdown() {
